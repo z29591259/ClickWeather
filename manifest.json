@@ -1,0 +1,21 @@
+{
+  "short_name": "一鍵天氣",
+  "name": "一鍵天氣",
+  "icons": [
+    {
+      "src": "icon-192.jpg",
+      "type": "image/jpg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.jpg",
+      "type": "image/jpg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html?source=app",
+  "scope": "./",
+  "background_color": "#BABABA",
+  "display": "standalone",
+  "theme_color": "#BABABA"
+}

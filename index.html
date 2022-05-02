@@ -1,0 +1,105 @@
+<!doctype html>
+
+<html lang="zh-Hant-TW">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="manifest.json" />
+    <title>ClickWeather</title>
+    <meta name="description" content="A weather App which just need one click to get all info you need.">
+    <meta name="author" content="Woodloch 木澤的研發腦 PeterYu">
+
+    <meta property="og:title" content="ClickWeather">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://z29591259.github.io/ClickWeather/">
+    <meta property="og:description" content="A weather App which just need one click to get all info you need.">
+    <meta property="og:image" content="image.png">
+
+    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="icon-192.jpg" type="image/jpg">
+    <link rel="apple-touch-icon" href="icon-512.jpg">
+
+    <script src="index.js?v=1.1"></script>
+    <style>
+        html {
+            height: 100%;
+            background-image: linear-gradient(45deg, rgba(130, 89, 219, 0.2), rgba(44, 192, 226, 0.2), rgba(182, 103, 181, 0.2)), linear-gradient(135deg, rgb(32, 11, 149), rgb(33, 54, 178), rgb(44, 112, 211));
+        }
+
+        div {
+            color: white;
+        }
+
+        .designer {
+            color: white;
+            position: absolute;
+            left: .5rem;
+            bottom: .5rem;
+        }
+
+        .loading {
+            width: 2rem;
+            height: 2rem;
+            position: absolute;
+            bottom: .5em;
+            right: .5em;
+            animation: spin 1.4s infinite steps(8, start);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            margin: .2rem .5rem;
+        }
+
+        .block {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: .5rem;
+            margin: .1rem;
+            padding: .3rem;
+        }
+
+        .weatherColumn {
+            display: inline-block;
+            width: 2.7rem;
+            height: 8rem;
+        }
+
+        .weatherItem {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 2.7rem;
+            height: 2rem;
+        }
+
+        .weatherIcon {
+            width: 2rem;
+            height: 2rem;
+        }
+    </style>
+</head>
+
+<body onload="onLoad();">
+    <div id="weatherBoard">Loading...</div>
+    <a class="designer" href="http://icons8.com">icons8.com</a>
+    <img class="loading hidden" src="https://img.icons8.com/color/96/000000/spinner-frame-5.png" />
+</body>
+
+</html>
