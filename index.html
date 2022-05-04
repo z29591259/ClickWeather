@@ -20,30 +20,55 @@
     <link rel="icon" href="icon-192.jpg" type="image/jpg">
     <link rel="apple-touch-icon" href="icon-512.jpg">
 
-    <script src="index.js?v=1.1"></script>
+    <script src="index.js?v=1.2"></script>
     <style>
-        html {
-            height: 100%;
+        body {
+            margin: 0;
             background-image: linear-gradient(45deg, rgba(130, 89, 219, 0.2), rgba(44, 192, 226, 0.2), rgba(182, 103, 181, 0.2)), linear-gradient(135deg, rgb(32, 11, 149), rgb(33, 54, 178), rgb(44, 112, 211));
         }
 
-        div {
-            color: white;
+        #app {
+            height: 100vh;
+
+            /* grid container settings */
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                'header'
+                'main'
+                'footer';
         }
 
-        .designer {
+        #app>header {
+            font-size: 18px;
+            padding: .5rem 0;
+            text-align: center;
+            font-weight: bold;
+            grid-area: header;
+        }
+
+        #app>main {
+            grid-area: main;
+            overflow: auto;
+        }
+
+        #app>footer {
+            grid-area: footer;
+            padding: .5rem;
+        }
+
+        div,
+        a {
             color: white;
-            position: absolute;
-            left: .5rem;
-            bottom: .5rem;
         }
 
         .loading {
             width: 2rem;
             height: 2rem;
             position: absolute;
-            bottom: .5em;
-            right: .5em;
+            right: .5rem;
+            bottom: .5rem;
             animation: spin 1.4s infinite steps(8, start);
         }
 
@@ -97,9 +122,21 @@
 </head>
 
 <body onload="onLoad();">
-    <div id="weatherBoard">Loading...</div>
-    <a class="designer" href="http://icons8.com">icons8.com</a>
-    <img class="loading hidden" src="https://img.icons8.com/color/96/000000/spinner-frame-5.png" />
+    <div id="app">
+        <header>
+            <section>一鍵天氣</section>
+        </header>
+        <main>
+            <div id="weatherBoard" style="text-align: center;">
+                <h3>Loading...</h3>
+            </div>
+        </main>
+        <footer>
+            <a href="https://woodloch.blog">Blog</a>&nbsp;
+            <a href="https://icons8.com">icons8.com</a>
+            <img class="loading hidden" src="https://img.icons8.com/color/96/000000/spinner-frame-5.png" />
+        </footer>
+    </div>
 </body>
 
 </html>

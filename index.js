@@ -84,6 +84,18 @@ function createWeatherRecord() {
 }
 
 function fetchWeatherData() {
+    document.querySelector('.loading').classList.toggle('hidden');
+    let now = new Date();
+    //if less than 60min use cache
+    if (localStorage[CACHE_DATA] &&
+        localStorage[CACHE_DATA_TIME] &&
+        (now.getTime() - parseInt(localStorage[CACHE_DATA_TIME], 10) < 3600000)) {
+        WeatherRecordData = JSON.parse(localStorage[CACHE_DATA]);
+        renderWeatherData();
+        document.querySelector('.loading').classList.toggle('hidden');
+        return;
+    }
+
     setDateBound();
     WeatherRecordData = createWeatherRecord();
 
@@ -99,9 +111,13 @@ function fetchWeatherData() {
         formData
     ).then(result => {
         parseWeatherData(result);
+        localStorage[CACHE_DATA_TIME] = new Date().getTime();
+        localStorage[CACHE_DATA] = JSON.stringify(WeatherRecordData);
         renderWeatherData();
+        document.querySelector('.loading').classList.toggle('hidden');
     }).catch(function (err) {
         alert(err);
+        document.querySelector('.loading').classList.toggle('hidden');
     });
 }
 
