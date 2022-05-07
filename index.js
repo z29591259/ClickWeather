@@ -3,8 +3,8 @@ let CityCodeList = ['F-D0047-005'];
 let LocationList = ['八德區', '龜山區'];
 let RenderTimeHourFrom = 6;
 let Days = 2;
-const CACHE_DATA_TIME = 'cache_data_time';
-const CACHE_DATA = 'cache_data';
+const CACHE_DATA_TIME = 'cache_weather_time';
+const CACHE_DATA = 'cache_weather_result';
 /**
  * Start time for api timeFrom param
  * @type {string}
@@ -86,18 +86,19 @@ function createWeatherRecord() {
 function fetchWeatherData() {
     document.querySelector('.loading').classList.toggle('hidden');
     let now = new Date();
+
+    setDateBound();
+    WeatherRecordData = createWeatherRecord();
+
     //if less than 60min use cache
     if (localStorage[CACHE_DATA] &&
         localStorage[CACHE_DATA_TIME] &&
         (now.getTime() - parseInt(localStorage[CACHE_DATA_TIME], 10) < 3600000)) {
-        WeatherRecordData = JSON.parse(localStorage[CACHE_DATA]);
+        parseWeatherData(JSON.parse(localStorage[CACHE_DATA]));
         renderWeatherData();
         document.querySelector('.loading').classList.toggle('hidden');
         return;
     }
-
-    setDateBound();
-    WeatherRecordData = createWeatherRecord();
 
     const formData = new FormData();
     formData.append('action', 'get_weather');
@@ -112,7 +113,7 @@ function fetchWeatherData() {
     ).then(result => {
         parseWeatherData(result);
         localStorage[CACHE_DATA_TIME] = new Date().getTime();
-        localStorage[CACHE_DATA] = JSON.stringify(WeatherRecordData);
+        localStorage[CACHE_DATA] = JSON.stringify(result);
         renderWeatherData();
         document.querySelector('.loading').classList.toggle('hidden');
     }).catch(function (err) {
@@ -141,7 +142,7 @@ function postData(url, data) {
 
 /**
  * Parse data then adapt to WeatherRecord object
- * @param {string} data json from API
+ * @param {object} data json from API
  */
 function parseWeatherData(data) {
     for (let i = 0; i < data.records.locations.length; i++) {
@@ -207,6 +208,7 @@ function renderWeatherData() {
     let html = '';
 
     WeatherRecordData.Days.forEach(function (days) {
+        let mergedLocationIndex = [];
         if (days.Citys[0].Locations.length === 0) {
             return;
         }
@@ -217,16 +219,27 @@ function renderWeatherData() {
         }
 
         days.Citys.forEach(city => {
-            city.Locations.forEach(location => {
+            city.Locations.forEach(function (location, index, locations) {
+                let cityName = location.Location.replace('區', '');
+                if (mergedLocationIndex.some(x => x === index)) {
+                    return;
+                }
+                for (let i = index + 1; i < locations.length; i++) {
+                    if (location.IsEqual(locations[i])) {
+                        mergedLocationIndex.push(i);
+                        cityName += '<br />' + locations[i].Location.replace('區', '');
+                    }
+                }
+
                 html += '<div class="container">';
-                html += '<div class="block"><div class="weatherColumn"><div class="weatherItem" style="height: 8rem;">' + location.Location.replace('區', '') + '</div></div></div>';
+                html += '<div class="block"><div class="weatherColumn"><div class="weatherItem" style="height: 8rem;">' + cityName + '</div></div></div>';
                 html += '<div class="block" style="min-width: 16.5rem;">';
-                for (let i = 0; i < days.Citys[0].Locations[0].TempTimes.length; i++) {
-                    if (days.Citys[0].Locations[0].TempTimes[i] < RenderTimeHourFrom) { continue; }
+                for (let i = 0; i < location.TempTimes.length; i++) {
+                    if (location.TempTimes[i] < RenderTimeHourFrom) { continue; }
                     html += '<div class="weatherColumn">';
-                    html += `<div class="weatherItem">${days.Citys[0].Locations[0].TempTimes[i]}</div>`;
+                    html += `<div class="weatherItem">${location.TempTimes[i]}</div>`;
                     html += `<div class="weatherItem"><img class="weatherIcon" src="${weatherImgUrl(days.Citys[0].Locations[0].WeatherCodes[i])}" /></div>`;
-                    html += `<div class="weatherItem">${days.Citys[0].Locations[0].Temperatures[i]}°</div>`;
+                    html += `<div class="weatherItem">${location.Temperatures[i]}°</div>`;
                     html += `<div class="weatherItem">${location.RainPrs[location.RainTimes.findIndex(x => x <= location.TempTimes[i] && (x + 6) > location.TempTimes[i])]}%</div>`;
                     html += '</div>';
                 }
@@ -234,7 +247,6 @@ function renderWeatherData() {
                 html += '</div></div>';
             });
         });
-
     });
     let weatherBoard = document.querySelector('#weatherBoard');
     weatherBoard.innerHTML = html;
@@ -395,5 +407,31 @@ class WeatherLocation {
         this.WeatherCodes = weatherCodes;
         this.RainTimes = rainTimes;
         this.RainPrs = rainPrs;
+    }
+
+    /**
+     * Checking for WeatherLocation equality
+     * @param {WeatherLocation} target 
+     * @returns boolean
+     */
+    IsEqual(target) {
+        return this.ArrayEquals(this.TempTimes, target.TempTimes)
+            && this.ArrayEquals(this.Temperatures, target.Temperatures)
+            && this.WeatherCodes.every((x, index) => weatherImgUrl(x) === weatherImgUrl(target.WeatherCodes[index]))
+            && this.ArrayEquals(this.RainTimes, target.RainTimes)
+            && this.ArrayEquals(this.RainPrs, target.RainPrs);
+    }
+
+    /**
+     * Checking for array equality
+     * @param {[]} a 
+     * @param {[]} b 
+     * @returns boolean
+     */
+    ArrayEquals(a, b) {
+        return Array.isArray(a) &&
+            Array.isArray(b) &&
+            a.length === b.length &&
+            a.every((val, index) => val === b[index]);
     }
 }
