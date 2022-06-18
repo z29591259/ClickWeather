@@ -108,7 +108,7 @@ function fetchWeatherData() {
     formData.append('endTime', EndTime);
 
     postData(
-        'https://script.google.com/macros/s/AKfycbycqO_dcczKDewbw2zOsMEiG2aRwy5bBrrLhgy9ziXKzTMNWiRrRVOgQ1h1YF63brk/exec',
+        'https://script.google.com/macros/s/AKfycbzflWbcJbTNgOtvN1NktrFsZLfhoeeUT0_rfExHg8tDMTdRAkWwKeelE_gOE-MHnfc/exec',
         formData
     ).then(result => {
         parseWeatherData(result);
