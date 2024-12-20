@@ -1,144 +1,165 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="zh-Hant-TW">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="manifest.json" />
     <title>ClickWeather</title>
-    <meta name="description" content="A weather App which just need one click to get all info you need.">
-    <meta name="author" content="Woodloch 木澤的研發腦 PeterYu">
+    <meta
+      name="description"
+      content="A weather App which just need one click to get all info you need."
+    />
+    <meta name="author" content="Woodloch 木澤的研發腦 PeterYu" />
 
-    <meta property="og:title" content="ClickWeather">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://z29591259.github.io/ClickWeather/">
-    <meta property="og:description" content="A weather App which just need one click to get all info you need.">
-    <meta property="og:image" content="image.png">
+    <meta property="og:title" content="ClickWeather" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://z29591259.github.io/ClickWeather/"
+    />
+    <meta
+      property="og:description"
+      content="A weather App which just need one click to get all info you need."
+    />
+    <meta property="og:image" content="image.png" />
 
-    <link rel="icon" href="favicon.ico">
-    <link rel="icon" href="icon-192.jpg" type="image/jpg">
-    <link rel="apple-touch-icon" href="icon-512.jpg">
+    <link rel="icon" href="favicon.ico" />
+    <link rel="icon" href="icon-192.jpg" type="image/jpg" />
+    <link rel="apple-touch-icon" href="icon-512.jpg" />
 
-    <script src="index.js?v=1.4"></script>
+    <script src="index.js?v=1.5"></script>
     <style>
-        body {
-            margin: 0;
-            background-image: linear-gradient(45deg, rgba(130, 89, 219, 0.2), rgba(44, 192, 226, 0.2), rgba(182, 103, 181, 0.2)), linear-gradient(135deg, rgb(32, 11, 149), rgb(33, 54, 178), rgb(44, 112, 211));
+      body {
+        margin: 0;
+        background-image: linear-gradient(
+            45deg,
+            rgba(130, 89, 219, 0.2),
+            rgba(44, 192, 226, 0.2),
+            rgba(182, 103, 181, 0.2)
+          ),
+          linear-gradient(
+            135deg,
+            rgb(32, 11, 149),
+            rgb(33, 54, 178),
+            rgb(44, 112, 211)
+          );
+      }
+
+      #app {
+        height: 100vh;
+
+        /* grid container settings */
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto;
+        grid-template-areas:
+          "header"
+          "main"
+          "footer";
+      }
+
+      #app > header {
+        font-size: 18px;
+        padding: 0.5rem 0;
+        text-align: center;
+        font-weight: bold;
+        grid-area: header;
+      }
+
+      #app > main {
+        grid-area: main;
+        overflow: auto;
+      }
+
+      #app > footer {
+        grid-area: footer;
+        padding: 0.5rem;
+      }
+
+      div,
+      a {
+        color: white;
+      }
+
+      .loading {
+        width: 2rem;
+        height: 2rem;
+        position: absolute;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        animation: spin 1.4s infinite steps(8, start);
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
         }
 
-        #app {
-            height: 100vh;
-
-            /* grid container settings */
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr auto;
-            grid-template-areas:
-                'header'
-                'main'
-                'footer';
+        to {
+          transform: rotate(360deg);
         }
+      }
 
-        #app>header {
-            font-size: 18px;
-            padding: .5rem 0;
-            text-align: center;
-            font-weight: bold;
-            grid-area: header;
-        }
+      .container {
+        display: flex;
+        flex-direction: row;
+        margin: 0.2rem 0.5rem;
+      }
 
-        #app>main {
-            grid-area: main;
-            overflow: auto;
-        }
+      .block {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 0.5rem;
+        margin: 0.1rem;
+        padding: 0.3rem;
+      }
 
-        #app>footer {
-            grid-area: footer;
-            padding: .5rem;
-        }
+      .weatherColumn {
+        display: inline-block;
+        width: 2.7rem;
+        height: 8rem;
+      }
 
-        div,
-        a {
-            color: white;
-        }
+      .weatherItem {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.7rem;
+        height: 2rem;
+      }
 
-        .loading {
-            width: 2rem;
-            height: 2rem;
-            position: absolute;
-            right: .5rem;
-            bottom: .5rem;
-            animation: spin 1.4s infinite steps(8, start);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .container {
-            display: flex;
-            flex-direction: row;
-            margin: .2rem .5rem;
-        }
-
-        .block {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: .5rem;
-            margin: .1rem;
-            padding: .3rem;
-        }
-
-        .weatherColumn {
-            display: inline-block;
-            width: 2.7rem;
-            height: 8rem;
-        }
-
-        .weatherItem {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 2.7rem;
-            height: 2rem;
-        }
-
-        .weatherIcon {
-            width: 2rem;
-            height: 2rem;
-        }
+      .weatherIcon {
+        width: 2rem;
+        height: 2rem;
+      }
     </style>
-</head>
+  </head>
 
-<body onload="onLoad();">
+  <body onload="onLoad();">
     <div id="app">
-        <header>
-            <section>一鍵天氣</section>
-        </header>
-        <main>
-            <div id="weatherBoard">
-                <div style="text-align: center;">
-                    <h3>Loading...</h3>
-                </div>
-            </div>
-        </main>
-        <footer>
-            <a href="https://woodloch.blog">Blog</a>&nbsp;
-            <a href="https://icons8.com">icons8.com</a>
-            <img class="loading hidden" src="https://img.icons8.com/color/96/000000/spinner-frame-5.png" />
-        </footer>
+      <header>
+        <section>一鍵天氣</section>
+      </header>
+      <main>
+        <div id="weatherBoard">
+          <div style="text-align: center">
+            <h3>Loading...</h3>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <a href="https://woodloch.blog">Blog</a>&nbsp;
+        <a href="https://icons8.com">icons8.com</a>
+        <img
+          class="loading hidden"
+          src="https://img.icons8.com/color/96/000000/spinner-frame-5.png"
+        />
+      </footer>
     </div>
-</body>
-
+  </body>
 </html>
